@@ -11,7 +11,7 @@ namespace MmoMechTrainer
         SpriteBatch spriteBatch;
 
         Texture2D bigDaddy;
-        Texture2D pc;
+        private PlayerCharacter pc;
         Texture2D map;
         private const int WindowWidth = 800;
         private const int WindowHeight = 800;
@@ -59,8 +59,6 @@ namespace MmoMechTrainer
             _graphics.PreferredBackBufferWidth = WindowWidth;
             _graphics.PreferredBackBufferHeight = WindowHeight;
 
-
-            pcPosition = new Vector2(WindowWidth / 2F, WindowHeight / 2F);
             pcSize = new Vector2(50, 50);
             pcRotation = 0.0F;
             
@@ -81,7 +79,7 @@ namespace MmoMechTrainer
             firstPhaseCounter = 200;
             
             isSecondPhase = false;
-            secondPhaseCounter = 100;
+            secondPhaseCounter = 30;
             isOver = false;
             isFired = false;
 
@@ -94,38 +92,31 @@ namespace MmoMechTrainer
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
             map = this.Content.Load<Texture2D>("Images/Maps/map");
-            pc = this.Content.Load<Texture2D>("Images/Classes/sch");
-            bigDaddy = this.Content.Load<Texture2D>("Images/Enemies/dadcred");
+            var characterIcon = Content.Load<Texture2D>("Images/Classes/sch");
+            pc = new PlayerCharacter(characterIcon)
+            {
+                Speed = 2,
+                Position = new Vector2(WindowWidth / 2F, WindowHeight / 4F),
+                Size = new Vector2(50, 50)
+            };
+            bigDaddy = this.Content.Load<Texture2D>("Images/Enemies/FFXIV_Fatebreaker_render");
             burntStrike = new Texture2D(GraphicsDevice, 1, 1);
-            burntStrike.SetData(new[] { new Color(0,0,255) });
+            burntStrike.SetData(new[] { new Color(255,0,0) });
         }
 
         protected override void Update(GameTime gameTime)
         {
             if (IsActive)
             {
-                KeyboardState state = Keyboard.GetState();
-                
-                if (state.IsKeyDown(Keys.Escape))
-                    Exit();
-                if (state.IsKeyDown(Keys.Right))
-                    pcPosition.X += 5;
-                if (state.IsKeyDown(Keys.Left))
-                    pcPosition.X -= 5;
-                if (state.IsKeyDown(Keys.Up))
-                    pcPosition.Y -= 5;
-                if (state.IsKeyDown(Keys.Down))
-                    pcPosition.Y += 5;
 
-                if (pcPosition.X > this.GraphicsDevice.Viewport.Width)
-                    pcPosition.X = 0;
-                if (pcPosition.X < 0)
-                    pcPosition.X = this.GraphicsDevice.Viewport.Width;
-                if (pcPosition.Y > this.GraphicsDevice.Viewport.Height)
-                    pcPosition.Y = 0;
-                if (pcPosition.Y < 0)
-                    pcPosition.Y = this.GraphicsDevice.Viewport.Height;
-
+                if (pc.Position.X > this.GraphicsDevice.Viewport.Width)
+                    pc.Position.X = 0;
+                if (pc.Position.X < 0)
+                    pc.Position = new Vector2(WindowWidth / 2F, WindowHeight / 4F);
+                if (pc.Position.Y > this.GraphicsDevice.Viewport.Height)
+                    pc.Position.Y = 0;
+                if (pc.Position.Y < 0)
+                    pc.Position = new Vector2(WindowWidth / 2F, WindowHeight / 4F);
 
                 Vector2 diff = burntStrikePosition - bigDaddyPosition;
 
@@ -166,15 +157,19 @@ namespace MmoMechTrainer
 
                 if (isSecondPhase)
                 {
-                    
 
+                    pc.Position = new Vector2(pc.Position.X-10, pc.Position.Y);
                     secondPhaseCounter -= 1;
+                    if (secondPhaseCounter == 0)
+                    {
+                        isSecondPhase = false;
+                    }
                 }
 
 
 
 
-
+                pc.Update();
 
                 base.Update(gameTime);
             }
@@ -187,10 +182,9 @@ namespace MmoMechTrainer
 
             spriteBatch.Begin(SpriteSortMode.FrontToBack);
             spriteBatch.Draw(map, destinationRectangle: new Rectangle(0, 0, WindowWidth, WindowHeight),Color.White);
-            spriteBatch.Draw(burntStrike, destinationRectangle: new Rectangle((int)bigDaddyPosition.X - burntStrikeWidth / 2, (int)bigDaddyPosition.Y - burntStrikeHeight / 2, burntStrikeWidth, burntStrikeHeight), null, new Color(0,0,255,burntStrikeOpacity), burntStrikeRotation, new Vector2(burntStrike.Width / 2, burntStrike.Height / 2), SpriteEffects.None, 0.5F);
+            spriteBatch.Draw(burntStrike, destinationRectangle: new Rectangle((int)bigDaddyPosition.X - burntStrikeWidth / 2, (int)bigDaddyPosition.Y - burntStrikeHeight / 2, burntStrikeWidth, burntStrikeHeight), null, new Color(255,0,0,burntStrikeOpacity), burntStrikeRotation, new Vector2(burntStrike.Width / 2, burntStrike.Height / 2), SpriteEffects.None, 0.5F);
             spriteBatch.Draw(bigDaddy, destinationRectangle: new Rectangle((int)bigDaddyPosition.X , (int)bigDaddyPosition.Y, (int)bigDaddySize.X, (int)bigDaddySize.Y),null, Color.White,bigDaddyRotation,new Vector2(bigDaddy.Width/2,bigDaddy.Height/2),SpriteEffects.None,1.0F);
-            spriteBatch.Draw(pc, destinationRectangle: new Rectangle((int)pcPosition.X, (int)pcPosition.Y, (int)pcSize.X, (int)pcSize.Y), null, Color.White, pcRotation, new Vector2(pc.Width / 2, pc.Height / 2), SpriteEffects.None, 0.5F);
-           
+            pc.Draw(spriteBatch);
             spriteBatch.End();
             base.Draw(gameTime);
         }

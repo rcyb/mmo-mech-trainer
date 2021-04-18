@@ -241,3 +241,15 @@
 /processorParam:TextureFormat=Color
 /build:Images/Classes/whm.png
 
+#begin Images/Enemies/FFXIV_Fatebreaker_render.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Images/Enemies/FFXIV_Fatebreaker_render.png
+

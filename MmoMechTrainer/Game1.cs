@@ -12,6 +12,7 @@ namespace MmoMechTrainer
 
         Texture2D bigDaddy;
         private PlayerCharacter pc;
+
         Texture2D map;
         private const int WindowWidth = 800;
         private const int WindowHeight = 800;
@@ -101,7 +102,7 @@ namespace MmoMechTrainer
             };
             bigDaddy = this.Content.Load<Texture2D>("Images/Enemies/FFXIV_Fatebreaker_render");
             burntStrike = new Texture2D(GraphicsDevice, 1, 1);
-            burntStrike.SetData(new[] { new Color(255,0,0) });
+            burntStrike.SetData(new[] { new Color(0,0,0,0) });
         }
 
         protected override void Update(GameTime gameTime)
@@ -139,14 +140,18 @@ namespace MmoMechTrainer
 
 
                 if (isfirstPhase)
-                {
+                {   
+                    if (firstPhaseCounter>50)
+                    {
+                        burntStrike.SetData(new[] { new Color(0, 0, 0, 0) });
+                    }
                     if (firstPhaseCounter < 50 && !isFired)
                     {
+                        burntStrike.SetData(new[] { new Color(255, 0, 0) });
                         burntStrikeOpacity = 1.0F;
                         isFired = true;
                     }
                     burntStrikeOpacity = burntStrikeOpacity -  0.01F;
-                    Debug.WriteLine(burntStrikeOpacity);
                     if (firstPhaseCounter == 0)
                     {
                         isfirstPhase = false;
@@ -157,8 +162,20 @@ namespace MmoMechTrainer
 
                 if (isSecondPhase)
                 {
-
-                    pc.Position = new Vector2(pc.Position.X-10, pc.Position.Y);
+                    burntStrike.SetData(new[] { new Color(0, 0, 0, 0) });
+                    Debug.WriteLine(pc.Position);
+                    if (pc.Position.X <400)
+                    {
+                        pc.Position = new Vector2(pc.Position.X - 10, pc.Position.Y);
+                    }
+                    if (pc.Position.X > 400)
+                    {
+                        pc.Position = new Vector2(pc.Position.X + 10, pc.Position.Y);
+                    }
+                    if (pc.Position.X == 400)
+                    {
+                        pc.Position = new Vector2(pc.Position.X + 10, pc.Position.Y);
+                    }
                     secondPhaseCounter -= 1;
                     if (secondPhaseCounter == 0)
                     {

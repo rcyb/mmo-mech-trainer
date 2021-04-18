@@ -10,8 +10,7 @@ namespace MmoMechTrainer
     {
         protected Texture2D _texture;
         public Vector2 Position;
-        public Color Colour = Color.White;
-        public float Speed;
+        public Color Colour;
         //public Input Input;
 
         public Rectangle Rectangle
@@ -27,14 +26,14 @@ namespace MmoMechTrainer
             _texture = texture;
         }
 
-        public virtual void Update(GameTime gameTime, List<Sprite>)
-        {
+        //public virtual void Update(GameTime gameTime, List<BurningStrike>)
+        //{
 
-        }
+        //}
 
         public virtual void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(_texture, Position, Colour);
+            spriteBatch.Draw(_texture, new Rectangle(0, 0, 250, 2000), Colour);
         }
     }
 }

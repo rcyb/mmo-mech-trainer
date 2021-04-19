@@ -10,6 +10,9 @@ namespace MmoMechTrainer
     {
         protected Texture2D _texture;
         public Vector2 Position;
+        public Vector2 BossPosition;
+        public float burntStrikeOpacity;
+        public float burntStrikeRotation;
         public Color Colour;
         //public Input Input;
 
@@ -33,7 +36,8 @@ namespace MmoMechTrainer
 
         public virtual void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(_texture, new Rectangle(0, 0, 250, 2000), Colour);
+            spriteBatch.Draw(_texture, destinationRectangle: new Rectangle((int)BossPosition.X - 250 / 2, (int)BossPosition.Y - 2000 / 2, 250, 2000), null, new Color(255, 0, 0, burntStrikeOpacity), burntStrikeRotation, new Vector2(_texture.Width / 2, _texture.Height / 2), SpriteEffects.None, 0.5F);
+            //spriteBatch.Draw(_texture, new Rectangle(400, 400, 250, 2000), Colour);
         }
     }
 }

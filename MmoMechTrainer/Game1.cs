@@ -12,6 +12,7 @@ namespace MmoMechTrainer
 
         Texture2D bigDaddy;
         private PlayerCharacter pc;
+        private BurningStrike BurningStrike;
 
         Texture2D map;
         private const int WindowWidth = 800;
@@ -69,10 +70,6 @@ namespace MmoMechTrainer
 
 
             burntStrikePosition = new Vector2(WindowWidth / 2F, WindowHeight / 2F);
-            burntStrikeRotation = bigDaddyRotation;
-            burntStrikeWidth = 250;
-            burntStrikeHeight = 2000;
-            burntStrikeOpacity = 0.0F;
 
             beforeMechanicTimer = 100;
             isAtPosition = false;
@@ -103,6 +100,13 @@ namespace MmoMechTrainer
             bigDaddy = this.Content.Load<Texture2D>("Images/Enemies/FFXIV_Fatebreaker_render");
             burntStrike = new Texture2D(GraphicsDevice, 1, 1);
             burntStrike.SetData(new[] { new Color(0,0,0,0) });
+            BurningStrike = new BurningStrike(burntStrike)
+            {
+                BossPosition = bigDaddyPosition,
+                burntStrikeRotation = bigDaddyRotation,
+                burntStrikeOpacity = 0.0F
+            };
+
         }
 
         protected override void Update(GameTime gameTime)
@@ -121,7 +125,7 @@ namespace MmoMechTrainer
 
                 Vector2 diff = burntStrikePosition - bigDaddyPosition;
 
-                
+
                 if (!bigDaddyPosition.Equals(burntStrikePosition) && !isAtPosition)
                 {
                     
@@ -147,6 +151,7 @@ namespace MmoMechTrainer
                     }
                     if (firstPhaseCounter < 50 && !isFired)
                     {
+                        Debug.WriteLine(bigDaddyPosition);
                         burntStrike.SetData(new[] { new Color(255, 0, 0) });
                         burntStrikeOpacity = 1.0F;
                         isFired = true;
@@ -163,7 +168,7 @@ namespace MmoMechTrainer
                 if (isSecondPhase)
                 {
                     burntStrike.SetData(new[] { new Color(0, 0, 0, 0) });
-                    Debug.WriteLine(pc.Position);
+                    
                     if (pc.Position.X <400)
                     {
                         pc.Position = new Vector2(pc.Position.X - 10, pc.Position.Y);
@@ -196,11 +201,12 @@ namespace MmoMechTrainer
         {
             GraphicsDevice.Clear(Color.Black);
 
-
             spriteBatch.Begin(SpriteSortMode.FrontToBack);
             spriteBatch.Draw(map, destinationRectangle: new Rectangle(0, 0, WindowWidth, WindowHeight),Color.White);
-            spriteBatch.Draw(burntStrike, destinationRectangle: new Rectangle((int)bigDaddyPosition.X - burntStrikeWidth / 2, (int)bigDaddyPosition.Y - burntStrikeHeight / 2, burntStrikeWidth, burntStrikeHeight), null, new Color(255,0,0,burntStrikeOpacity), burntStrikeRotation, new Vector2(burntStrike.Width / 2, burntStrike.Height / 2), SpriteEffects.None, 0.5F);
+            //spriteBatch.Draw(burntStrike, destinationRectangle: new Rectangle((int)bigDaddyPosition.X - burntStrikeWidth / 2, (int)bigDaddyPosition.Y - burntStrikeHeight / 2, burntStrikeWidth, burntStrikeHeight), null, new Color(255,0,0,burntStrikeOpacity), burntStrikeRotation, new Vector2(burntStrike.Width / 2, burntStrike.Height / 2), SpriteEffects.None, 0.5F);
+            BurningStrike.Draw(spriteBatch);
             spriteBatch.Draw(bigDaddy, destinationRectangle: new Rectangle((int)bigDaddyPosition.X , (int)bigDaddyPosition.Y, (int)bigDaddySize.X, (int)bigDaddySize.Y),null, Color.White,bigDaddyRotation,new Vector2(bigDaddy.Width/2,bigDaddy.Height/2),SpriteEffects.None,1.0F);
+            
             pc.Draw(spriteBatch);
             spriteBatch.End();
             base.Draw(gameTime);

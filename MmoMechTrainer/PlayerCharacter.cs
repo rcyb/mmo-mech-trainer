@@ -12,6 +12,8 @@ namespace MmoMechTrainer
         private Texture2D _texture;
         public Vector2 Position;
         public Vector2 Size;
+        public float WindowWidth;
+        public float WindowHeight;
 
         public float Speed = 2f;
 
@@ -39,7 +41,14 @@ namespace MmoMechTrainer
                 Position.Y += Speed;
             }
 
-            
+            if (Position.X > WindowWidth)
+                Position.X = 0;
+            if (Position.X < 0)
+                Position = new Vector2(WindowWidth / 2F, WindowHeight / 4F);
+            if (Position.Y > WindowHeight)
+                Position.Y = 0;
+            if (Position.Y < 0)
+                Position = new Vector2(WindowWidth / 2F, WindowHeight / 4F);
 
         }
 

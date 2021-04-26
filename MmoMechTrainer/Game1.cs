@@ -139,12 +139,6 @@ namespace MmoMechTrainer
             spriteBatch.End();
             base.Draw(gameTime);
         }
-        private static float Sigmoid(float currentValue, float maxValue, float lambda)
-        {
-            float range = maxValue * 2F;
-            float result = ((range / (1F + ((float)System.Math.Exp((-currentValue * lambda))))) - maxValue);
-            return result;
-        }
 
     }
 }

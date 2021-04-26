@@ -113,8 +113,11 @@ namespace MmoMechTrainer
                 fightDuration -= 1;
                 bigDaddy.Update();
                 burningStrikeFire.Update();
+                burningStrikeFire.BossPosition = bigDaddy.Position;
                 burningStrikeLightning.Update();
+                burningStrikeLightning.BossPosition = bigDaddy.Position;
                 burningStrikeLight.Update();
+                burningStrikeLight.BossPosition = bigDaddy.Position;
                 pc.Update();
 
                 base.Update(gameTime);
